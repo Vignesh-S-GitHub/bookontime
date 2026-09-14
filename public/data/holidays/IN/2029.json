@@ -1,0 +1,62 @@
+[
+  {
+    "date": "2029-01-26",
+    "name": "Republic Day",
+    "country": "IN",
+    "region": "",
+    "type": "public",
+    "scope": "national",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-03-30",
+    "name": "Good Friday",
+    "country": "IN",
+    "region": "",
+    "type": "public",
+    "scope": "national",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-04-14",
+    "name": "Ambedkar Jayanti",
+    "country": "IN",
+    "region": "",
+    "type": "public",
+    "scope": "national",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-08-15",
+    "name": "Independence Day",
+    "country": "IN",
+    "region": "",
+    "type": "public",
+    "scope": "national",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-10-02",
+    "name": "Gandhi Jayanti",
+    "country": "IN",
+    "region": "",
+    "type": "public",
+    "scope": "national",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-12-25",
+    "name": "Christmas Day",
+    "country": "IN",
+    "region": "",
+    "type": "public",
+    "scope": "national",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

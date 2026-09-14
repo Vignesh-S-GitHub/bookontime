@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2028-05-01",
+    "name": "Gujarat Day",
+    "country": "IN",
+    "region": "GJ",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2028-10-31",
+    "name": "Sardar Vallabhbhai Patel Jayanti",
+    "country": "IN",
+    "region": "GJ",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

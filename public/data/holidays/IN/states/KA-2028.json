@@ -1,0 +1,42 @@
+[
+  {
+    "date": "2028-04-30",
+    "name": "Basava Jayanti",
+    "country": "IN",
+    "region": "KA",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2028-09-17",
+    "name": "Hyderabad-Karnataka Liberation Day",
+    "country": "IN",
+    "region": "KA",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2028-11-01",
+    "name": "Karnataka Formation Day",
+    "country": "IN",
+    "region": "KA",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2028-11-08",
+    "name": "Kanakadasa Jayanti",
+    "country": "IN",
+    "region": "KA",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

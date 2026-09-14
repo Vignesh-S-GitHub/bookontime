@@ -1,0 +1,52 @@
+[
+  {
+    "date": "2027-01-12",
+    "name": "Swami Vivekananda Jayanti",
+    "country": "IN",
+    "region": "WB",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-01-23",
+    "name": "Netaji Subhas Chandra Bose Jayanti",
+    "country": "IN",
+    "region": "WB",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-04-15",
+    "name": "Bengali New Year",
+    "country": "IN",
+    "region": "WB",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-05-01",
+    "name": "Labour Day",
+    "country": "IN",
+    "region": "WB",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-05-08",
+    "name": "Rabindra Jayanti",
+    "country": "IN",
+    "region": "WB",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2029-04-05",
+    "name": "Babu Jagjivan Ram Jayanti",
+    "country": "IN",
+    "region": "AP",
+    "type": "observance",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-11-01",
+    "name": "Formation Day",
+    "country": "IN",
+    "region": "AP",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

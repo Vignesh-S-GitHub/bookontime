@@ -1,0 +1,82 @@
+[
+  {
+    "date": "2026-01-15",
+    "name": "Pongal",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://gstchennai.gov.in/wp-content/uploads/2025/12/CGEWCC-letter-dated-05.12.2025-regarding-List-of-Holiday-2026.pdf",
+    "tentative": false
+  },
+  {
+    "date": "2026-11-08",
+    "name": "Deepavali",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://gstchennai.gov.in/wp-content/uploads/2025/12/CGEWCC-letter-dated-05.12.2025-regarding-List-of-Holiday-2026.pdf",
+    "tentative": false
+  },
+  {
+    "date": "2027-01-15",
+    "name": "Pongal",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://www.drikpanchang.com/festivals/pongal/thai-pongal-date-time.html?year=2027",
+    "tentative": true
+  },
+  {
+    "date": "2028-01-15",
+    "name": "Pongal",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://www.drikpanchang.com/festivals/pongal/thai-pongal-date-time.html?year=2028",
+    "tentative": true
+  },
+  {
+    "date": "2027-10-29",
+    "name": "Deepavali",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://www.drikpanchang.com/hindu-festivals/diwali/diwali.html",
+    "tentative": true
+  },
+  {
+    "date": "2028-10-17",
+    "name": "Deepavali",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://www.drikpanchang.com/hindu-festivals/diwali/diwali.html",
+    "tentative": true
+  },
+  {
+    "date": "2029-11-05",
+    "name": "Deepavali",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://www.drikpanchang.com/festivals/lakshmipuja/festivals-lakshmipuja-timings.html?year=2029",
+    "tentative": true
+  },
+  {
+    "date": "2029-01-14",
+    "name": "Pongal",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://www.drikpanchang.com/festivals/pongal/thai-pongal-date-time.html?year=2029",
+    "tentative": true
+  }
+]

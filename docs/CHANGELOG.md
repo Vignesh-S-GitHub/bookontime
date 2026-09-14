@@ -1,5 +1,18 @@
 # Product Decision Changelog
 
+## 2026-09-12 — User-directed appearance lock
+
+- The user explicitly requested the same white-and-blue theme and fonts throughout.
+- Version 1 now always renders the approved light palette and Inter, independent of system appearance. This supersedes the earlier System/Light/Dark selector requirement.
+- Preserve the original ticket-and-clock artwork, framed directly in the header without the padded app-icon tile. The supplied travel background uses subtle fades on pale-blue surfaces.
+- Legacy backup theme values remain readable for compatibility, but do not change the locked appearance.
+
+## 2026-09-14 — Version 1 implementation
+
+- Added the static React/TypeScript PWA, four booking rule models, local reminders and groups, calendar exports, validated backups, regional holiday data, and notification fallback.
+- Added locked dependencies, automated domain/storage/notification/data checks and GitHub Actions validation and Pages workflows.
+- Release verification and limitations are recorded in `IMPLEMENTATION_REPORT.md`.
+
 ## 2026-09-11 — Specification freeze for initial build
 
 - Final product name: BookOnTime.

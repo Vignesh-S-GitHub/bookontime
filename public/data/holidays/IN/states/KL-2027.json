@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2027-04-21",
+    "name": "Vaisakhi",
+    "country": "IN",
+    "region": "KL",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-05-01",
+    "name": "Labour Day",
+    "country": "IN",
+    "region": "KL",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-11-01",
+    "name": "Kerala Formation Day",
+    "country": "IN",
+    "region": "KL",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

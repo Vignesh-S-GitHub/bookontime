@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2029-12-03",
+    "name": "Feast of St. Francis Xavier",
+    "country": "IN",
+    "region": "GA",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-12-19",
+    "name": "Goa Liberation Day",
+    "country": "IN",
+    "region": "GA",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

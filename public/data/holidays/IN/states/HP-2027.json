@@ -1,0 +1,42 @@
+[
+  {
+    "date": "2027-01-25",
+    "name": "State Day",
+    "country": "IN",
+    "region": "HP",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-04-15",
+    "name": "Himachal Day",
+    "country": "IN",
+    "region": "HP",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-05-09",
+    "name": "Maharana Pratap Jayanti",
+    "country": "IN",
+    "region": "HP",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-10-07",
+    "name": "Maharishi Valmiki Jayanti",
+    "country": "IN",
+    "region": "HP",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

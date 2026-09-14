@@ -1,0 +1,12 @@
+[
+  {
+    "date": "2026-05-01",
+    "name": "Maharashtra Day",
+    "country": "IN",
+    "region": "MH",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

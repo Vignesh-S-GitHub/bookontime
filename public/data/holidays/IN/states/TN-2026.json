@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2026-01-15",
+    "name": "Pongal",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://gstchennai.gov.in/wp-content/uploads/2025/12/CGEWCC-letter-dated-05.12.2025-regarding-List-of-Holiday-2026.pdf",
+    "tentative": false
+  },
+  {
+    "date": "2026-05-01",
+    "name": "Labour Day",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2026-11-08",
+    "name": "Deepavali",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://gstchennai.gov.in/wp-content/uploads/2025/12/CGEWCC-letter-dated-05.12.2025-regarding-List-of-Holiday-2026.pdf",
+    "tentative": false
+  }
+]

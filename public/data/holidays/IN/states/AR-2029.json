@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2029-01-01",
+    "name": "New Year's Day",
+    "country": "IN",
+    "region": "AR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-02-20",
+    "name": "State Day",
+    "country": "IN",
+    "region": "AR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-12-01",
+    "name": "Indigenous Faith Day",
+    "country": "IN",
+    "region": "AR",
+    "type": "observance",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

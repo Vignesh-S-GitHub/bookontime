@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2027-03-22",
+    "name": "Bihar Day",
+    "country": "IN",
+    "region": "BR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-05-01",
+    "name": "Labour Day",
+    "country": "IN",
+    "region": "BR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

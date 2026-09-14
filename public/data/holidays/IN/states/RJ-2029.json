@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2029-05-08",
+    "name": "Rabindra Jayanti",
+    "country": "IN",
+    "region": "RJ",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-05-09",
+    "name": "Maharana Pratap Jayanti",
+    "country": "IN",
+    "region": "RJ",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

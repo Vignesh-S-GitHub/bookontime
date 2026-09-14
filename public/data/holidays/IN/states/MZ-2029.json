@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2029-06-30",
+    "name": "Remna Ni",
+    "country": "IN",
+    "region": "MZ",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2029-07-06",
+    "name": "MHIP Day",
+    "country": "IN",
+    "region": "MZ",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

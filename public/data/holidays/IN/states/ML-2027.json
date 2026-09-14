@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2027-06-15",
+    "name": "YMA Day",
+    "country": "IN",
+    "region": "ML",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-07-13",
+    "name": "Bhanu Jayanti / Martyrs' Day",
+    "country": "IN",
+    "region": "ML",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-11-23",
+    "name": "Seng Kut Snem",
+    "country": "IN",
+    "region": "ML",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

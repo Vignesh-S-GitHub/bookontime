@@ -1,0 +1,12 @@
+[
+  {
+    "date": "2029-05-16",
+    "name": "State Day",
+    "country": "IN",
+    "region": "SK",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

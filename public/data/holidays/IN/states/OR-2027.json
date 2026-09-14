@@ -1,0 +1,12 @@
+[
+  {
+    "date": "2027-04-01",
+    "name": "Odisha Day",
+    "country": "IN",
+    "region": "OR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]

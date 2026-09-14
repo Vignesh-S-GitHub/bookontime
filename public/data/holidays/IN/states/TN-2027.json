@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2027-01-15",
+    "name": "Pongal",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://www.drikpanchang.com/festivals/pongal/thai-pongal-date-time.html?year=2027",
+    "tentative": true
+  },
+  {
+    "date": "2027-05-01",
+    "name": "Labour Day",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-10-29",
+    "name": "Deepavali",
+    "country": "IN",
+    "region": "TN",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://www.drikpanchang.com/hindu-festivals/diwali/diwali.html",
+    "tentative": true
+  }
+]

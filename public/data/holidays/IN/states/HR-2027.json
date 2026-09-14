@@ -1,0 +1,52 @@
+[
+  {
+    "date": "2027-01-05",
+    "name": "Guru Gobind Singh Jayanti",
+    "country": "IN",
+    "region": "HR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-07-31",
+    "name": "Martyrdom Day of Shaheed Udham Singh",
+    "country": "IN",
+    "region": "HR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-09-22",
+    "name": "Maharaja Agrasen Jayanti",
+    "country": "IN",
+    "region": "HR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-11-01",
+    "name": "Formation Day",
+    "country": "IN",
+    "region": "HR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  },
+  {
+    "date": "2027-12-26",
+    "name": "Shaheed Udham Singh Jayanti",
+    "country": "IN",
+    "region": "HR",
+    "type": "public",
+    "scope": "regional",
+    "source": "https://github.com/commenthol/date-holidays",
+    "tentative": true
+  }
+]
