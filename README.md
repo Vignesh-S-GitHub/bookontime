@@ -1,35 +1,45 @@
+<div align="center">
+
 # BookOnTime
+### Book before it’s late.
 
-**Book Before It’s Late.**
+**Know when booking opens · prepare early · act on time**
 
-BookOnTime is a local-first, static Progressive Web App focused on one problem: helping users know **when a booking, reservation, ticket sale, registration, or slot opens** so they can be ready before the opening time.
+</div>
 
-This repository is intentionally specification-first. Before implementing the app, read `AGENTS.md` and everything under `docs/`.
+BookOnTime is a local-first planning app for time-sensitive bookings: ticket sales, reservations, registrations, and appointment slots. It helps you track when an opportunity opens and prepare the details you need before that moment arrives.
 
-## Product constraints
+## What it helps you manage
 
-- No login or account system
-- No backend required for Version 1
-- No payment processing or credential storage
-- No automated ticket purchasing
-- Static GitHub Pages deployment
-- Responsive desktop + mobile PWA
-- Local-first storage
-- Booking-opening datetime is the core product concept
+- A booking or release date and time, with clear countdown context
+- Reminders and preparation details for upcoming opportunities
+- A focused view of future booking windows
+- A responsive, installable PWA that works locally in the browser
 
-## Codex
+## Product boundaries
 
-When using Codex, start with `AGENTS.md`. The written specification overrides placeholder content in generated mockups.
+BookOnTime is designed as a static, GitHub Pages-compatible app. It does not provide accounts, cloud sync, payments, credential storage, automatic purchasing, CAPTCHA solving, or form automation. Your booking remains yours to complete on the relevant service.
 
-## Run Version 1
+## Run locally
 
-Requires Node.js 24+ and npm.
+Requires **Node.js 24 or newer** and npm.
 
-```sh
+```bash
 npm ci
 npm run dev
 ```
 
-Open the printed `/bookontime/` URL. Validate with `npm test`, `npm run typecheck`, `npm run format:check`, and `npm run build`. Preview the static build with `npm run preview`.
+Open the local URL printed by Vite. For a production build and local preview:
 
-See [implementation and maintenance](docs/IMPLEMENTATION.md) for date semantics, holiday generation/overrides, backups, offline limitations and GitHub Pages deployment.
+```bash
+npm run build
+npm run preview
+```
+
+## Project notes
+
+This project is spec-led. Start with the repository’s `AGENTS.md` and the product, acceptance, design, and booking-rule documents in `docs/` before changing behavior. The app is built with TypeScript, Vite, and a static PWA setup.
+
+---
+
+<p align="center"><sub>Be ready when the window opens.</sub></p>
