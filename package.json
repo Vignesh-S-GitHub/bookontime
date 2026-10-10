@@ -13,9 +13,18 @@
     "assets": "node scripts/prepare-assets.ts",
     "verify:build": "node scripts/verify-build.ts",
     "format": "prettier --write src tests scripts/*.ts *.ts",
-    "format:check": "prettier --check src tests scripts/*.ts *.ts"
+    "format:check": "prettier --check src tests scripts/*.ts *.ts",
+    "build:android": "npm run typecheck && vite build --mode android",
+    "android:assets": "node scripts/prepare-android-assets.ts",
+    "android:sync": "npm run android:assets && npm run build:android && cap sync android",
+    "dev:android": "vite --mode android --host 127.0.0.1",
+    "security:check": "node scripts/verify-android-security.ts"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/local-notifications": "^8.3.1",
     "@fontsource-variable/inter": "^5.3.0",
     "@js-temporal/polyfill": "^0.5.1",
     "idb": "^8.0.3",
@@ -25,6 +34,7 @@
     "zod": "^4.6.2"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "@types/node": "^22.20.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
@@ -40,5 +50,10 @@
   },
   "engines": {
     "node": ">=24.0.0"
+  },
+  "overrides": {
+    "xcode": {
+      "uuid": "^11.1.1"
+    }
   }
 }

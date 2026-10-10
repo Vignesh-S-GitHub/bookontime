@@ -1,5 +1,15 @@
 node_modules/
 dist/
+dist-android/
+android/.gradle/
+android/local.properties
+android/**/build/
+*.jks
+*.keystore
+output/
+.playwright-cli/
+android/app/src/main/assets/
+android/capacitor-cordova-android-plugins/
 work/
 test-results/
 playwright-report/

@@ -27,6 +27,7 @@ import {
 } from "./domain";
 import { download, exportICS } from "./calendar-export";
 import { longWeekends, type Holiday } from "./holidays";
+import { offlineApp } from "./platform";
 export type AppContextType = {
   data: AppData;
   update: (fn: (d: AppData) => AppData) => Promise<void>;
@@ -193,9 +194,10 @@ export function Countdown({
   );
 }
 export function BookingActions({ reminder: r }: { reminder: Reminder }) {
+  const { notify } = useApp();
   return (
     <div className="actions">
-      {r.bookingUrl ? (
+      {r.bookingUrl && !offlineApp ? (
         <a
           className="button primary"
           href={r.bookingUrl}
@@ -206,15 +208,23 @@ export function BookingActions({ reminder: r }: { reminder: Reminder }) {
           Open Booking Site
         </a>
       ) : (
-        <span className="muted">No booking site added</span>
+        <span className="muted small">
+          {offlineApp
+            ? "Booking links are stored as reference only."
+            : "No booking site added"}
+        </span>
       )}
       <button
         onClick={() =>
-          download("bookontime-opening.ics", exportICS([r]), "text/calendar")
+          void download(
+            "bookontime-opening.ics",
+            exportICS([r]),
+            "text/calendar",
+          ).catch(() => notify("Calendar export could not be completed."))
         }
       >
         <CalendarPlus size={17} />
-        Add to Calendar
+        Export calendar file
       </button>
     </div>
   );
@@ -276,9 +286,12 @@ export function HolidayContext({
   if (!date) return null;
   const matching = holidays.filter((h) => h.date === date);
   const weekend = settings.longWeekends
-    ? longWeekends(holidays, settings.weekendDays).find(
-        (w) => w.start <= date && w.end >= date,
-      )
+    ? longWeekends(
+        holidays.filter(
+          (h) => h.scope === "national" || h.region === settings.primaryRegion,
+        ),
+        settings.weekendDays,
+      ).find((w) => w.start <= date && w.end >= date)
     : undefined;
   if (!matching.length && !weekend)
     return (

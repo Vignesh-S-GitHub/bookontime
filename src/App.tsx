@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { useRegisterSW } from "virtual:pwa-register/react";
 import {
   Home,
   Bell,
@@ -18,13 +17,17 @@ import {
   Layers3,
   Download,
   Info,
-  WifiOff,
+  ShieldCheck,
   X,
 } from "lucide-react";
+import { App as AndroidApp } from "@capacitor/app";
+import { useRegisterSW } from "virtual:pwa-register/react";
 import { categories, initialData, type AppData, type Rule } from "./domain";
 import { loadData, mutateData } from "./storage";
 import { checkAlerts } from "./notifications";
-import { AppContext, Brand, Empty, PageHeading, PrivacyNote } from "./ui";
+import { listenForAlertTap, syncAndroidAlerts } from "./android-alerts";
+import { nativeAndroid, offlineApp } from "./platform";
+import { AppContext, Brand, Empty, PrivacyNote } from "./ui";
 const Dashboard = lazy(() => import("./Dashboard"));
 const ReminderForm = lazy(() => import("./ReminderForm"));
 const Reminders = lazy(() => import("./Reminders"));
@@ -33,128 +36,158 @@ const Rules = lazy(() => import("./Rules"));
 const Calendar = lazy(() => import("./Calendar"));
 const Groups = lazy(() => import("./Groups"));
 const Settings = lazy(() => import("./Settings"));
-type InstallEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: string }>;
-};
+const OfflineSettings = lazy(() => import("./OfflineSettings"));
 export default function App() {
   const [data, setData] = useState<AppData | null>(null);
-  const current = useRef<AppData>(initialData());
+  const current = useRef(initialData());
+  const loaded = useRef(false);
   const [loadError, setLoadError] = useState("");
   const [toast, setToast] = useState("");
+  const [alertError, setAlertError] = useState("");
   const [route, setRoute] = useState(location.hash.slice(1) || "home");
   const [now, setNow] = useState(Date.now());
-  const [online, setOnline] = useState(navigator.onLine);
-  const installer = useRef<InstallEvent | null>(null);
   const queue = useRef(Promise.resolve());
+  const installer = useRef<(Event & { prompt: () => Promise<void> }) | null>(
+    null,
+  );
   const {
     needRefresh: [needRefresh, setNeedRefresh],
-    offlineReady: [offlineReady, setOfflineReady],
     updateServiceWorker,
-  } = useRegisterSW({
-    onRegisterError: () =>
-      setToast("Offline setup could not finish. Retry when connected."),
-  });
+  } = useRegisterSW();
+  const go = useCallback((path: string) => {
+    location.hash = path;
+  }, []);
+  const reconcile = useCallback(
+    async (reminders = current.current.reminders, force = false) => {
+      try {
+        await syncAndroidAlerts(reminders, force);
+        setAlertError("");
+      } catch {
+        setAlertError(
+          "Reminders are saved, but alerts could not be scheduled. Open Notifications to retry.",
+        );
+      }
+    },
+    [],
+  );
   useEffect(() => {
+    let live = true;
     loadData()
       .then((d) => {
+        if (!live) return;
         current.current = d;
+        loaded.current = true;
         setData(d);
+        void reconcile(d.reminders, true);
       })
-      .catch((e) =>
-        setLoadError(
-          `Device storage could not be opened: ${e.message}. No data has been overwritten.`,
-        ),
-      );
+      .catch(() => {
+        if (live)
+          setLoadError(
+            "Device storage could not be opened. No saved data has been overwritten.",
+          );
+      });
     const tick = setInterval(() => setNow(Date.now()), 1000);
     const hash = () => {
       setRoute(location.hash.slice(1) || "home");
       window.scrollTo(0, 0);
     };
-    const network = () => setOnline(navigator.onLine);
-    const install = (event: Event) => {
-      event.preventDefault();
-      installer.current = event as InstallEvent;
+    const installEvent = (e: Event) => {
+      e.preventDefault();
+      installer.current = e as typeof installer.current;
     };
     window.addEventListener("hashchange", hash);
-    window.addEventListener("online", network);
-    window.addEventListener("offline", network);
-    window.addEventListener("beforeinstallprompt", install);
+    if (!offlineApp)
+      window.addEventListener("beforeinstallprompt", installEvent);
+    document.documentElement.dataset.theme = "light";
+    document.documentElement.dataset.offline = String(offlineApp);
     return () => {
+      live = false;
       clearInterval(tick);
       window.removeEventListener("hashchange", hash);
-      window.removeEventListener("online", network);
-      window.removeEventListener("offline", network);
-      window.removeEventListener("beforeinstallprompt", install);
+      window.removeEventListener("beforeinstallprompt", installEvent);
     };
-  }, []);
+  }, [reconcile]);
+  useEffect(() => {
+    if (!nativeAndroid) return;
+    const handles = [
+      listenForAlertTap(go),
+      AndroidApp.addListener("appStateChange", (event) => {
+        if (event.isActive && loaded.current) void reconcile(undefined, true);
+      }),
+      AndroidApp.addListener("backButton", () => {
+        if (
+          !window.dispatchEvent(
+            new Event("bookontime-back", { cancelable: true }),
+          )
+        )
+          return;
+        if (location.hash !== "#home") go("home");
+        else void AndroidApp.exitApp();
+      }),
+    ];
+    return () => {
+      for (const h of handles) void h.then((handle) => handle.remove());
+    };
+  }, [go, reconcile]);
   useEffect(() => {
     if (!toast) return;
-    const timeout = setTimeout(() => setToast(""), 7000);
-    return () => clearTimeout(timeout);
+    const t = setTimeout(() => setToast(""), 7000);
+    return () => clearTimeout(t);
   }, [toast]);
   useEffect(() => {
-    if (data)
+    if (!offlineApp && data)
       void checkAlerts(data.reminders, now).catch(() =>
-        setToast(
-          "A browser notification could not be delivered. Use calendar export as a fallback.",
-        ),
+        setToast("A browser alert could not be delivered."),
       );
   }, [data, Math.floor(now / 15000)]);
-  useEffect(() => {
-    // The approved white-and-blue appearance is independent of device settings.
-    document.documentElement.dataset.theme = "light";
-  }, []);
-  const update = useCallback((fn: (d: AppData) => AppData): Promise<void> => {
-    const operation = queue.current.then(async () => {
-      const next = await mutateData(fn);
-      current.current = next;
-      setData(next);
-    });
-    queue.current = operation.catch(() => {
-      setToast(
-        "Your change could not be saved to device storage. Please export a backup and try again.",
+  const update = useCallback(
+    (fn: (d: AppData) => AppData): Promise<void> => {
+      const operation = queue.current.then(async () => {
+        const next = await mutateData(fn);
+        current.current = next;
+        setData(next);
+        await reconcile(next.reminders);
+      });
+      queue.current = operation.catch(() =>
+        setToast(
+          "Your change could not be saved to device storage. Please try again.",
+        ),
       );
-    });
-    return operation;
-  }, []);
-  const go = useCallback((path: string) => {
-    location.hash = path;
-  }, []);
+      return operation;
+    },
+    [reconcile],
+  );
   function install() {
-    if (installer.current) {
+    if (installer.current)
       void installer.current
         .prompt()
-        .then(() => installer.current?.userChoice)
-        .then((choice) => {
-          if (choice?.outcome === "accepted")
-            setToast("BookOnTime installation accepted.");
-          installer.current = null;
-        })
-        .catch(() => setToast("Use your browser menu to install BookOnTime."));
-    } else {
-      go("settings");
-      setToast(
-        "Use your browser menu → Install app / Add to Home Screen. On iOS, use Safari → Share → Add to Home Screen.",
-      );
-    }
+        .catch(() => setToast("Use the browser menu to install BookOnTime."));
+    else setToast("Use the browser menu → Install app / Add to Home Screen.");
   }
   const [page, id] = route.split("/");
-  let categoryParam = "";
+  let category = "";
   try {
-    categoryParam = decodeURIComponent(id ?? "");
+    category = decodeURIComponent(id ?? "");
   } catch {
-    /* Malformed route: use default category. */
+    /* Invalid route uses default category. */
   }
   const reminder = data?.reminders.find((r) => r.id === id);
   const nav = [
     ["home", "Home", Home],
     ["reminders", "Reminders", Bell],
     ["calendar", "Calendar", CalendarDays],
-    ["rules", "Booking Rules", SlidersHorizontal],
-    ["groups", "Journey Groups", Layers3],
-    ["settings", "Settings", SettingsIcon],
+    ["rules", "Booking rules", SlidersHorizontal],
+    ["groups", "Groups", Layers3],
+    ["settings", "General settings", SettingsIcon],
   ] as const;
+  const settingsPages = [
+    "settings",
+    "holidays",
+    "notifications",
+    "permissions",
+    "data",
+    "about",
+  ];
   const screen = !data ? (
     loadError ? (
       <section className="panel">
@@ -171,8 +204,8 @@ export default function App() {
     <ReminderForm
       key={route}
       initialCategory={
-        categories.includes(categoryParam as Rule["category"])
-          ? (categoryParam as Rule["category"])
+        categories.includes(category as Rule["category"])
+          ? (category as Rule["category"])
           : undefined
       }
     />
@@ -192,30 +225,35 @@ export default function App() {
     <Calendar />
   ) : page === "groups" ? (
     <Groups selectedId={id} />
-  ) : page === "settings" ? (
-    <Settings install={install} online={online} />
+  ) : settingsPages.includes(page) ? (
+    offlineApp ? (
+      <OfflineSettings key={page} section={page} />
+    ) : (
+      <Settings install={install} online={navigator.onLine} />
+    )
   ) : page === "more" ? (
     <>
-      <PageHeading title="More" />
-      <div className="more-menu">
-        {nav.slice(3).map(([path, label, Icon]) => (
-          <a className="panel" href={`#${path}`} key={path}>
-            <Icon />
-            {label}
+      <div className="more-brand">
+        <Brand />
+      </div>
+      <div className="panel more-menu">
+        {(
+          [
+            ...nav.slice(5),
+            ["notifications", "Notifications", Bell],
+            ["holidays", "Holidays", CalendarDays],
+            ...nav.slice(3, 5),
+            ["data", "Data & backup", Download],
+            ["about", "About", Info],
+          ] as const
+        ).map(([path, label, Icon]) => (
+          <a href={`#${path}`} key={path}>
+            <Icon size={22} />
+            <span>{label}</span>
+            <span aria-hidden="true">›</span>
           </a>
         ))}
-        <a href="#settings" className="panel">
-          <Download />
-          Data & Backup
-        </a>
-        <button className="panel" onClick={install}>
-          <Download />
-          Install App
-        </button>
-        <a href="#settings" className="panel">
-          <Info />
-          About BookOnTime
-        </a>
+        {!offlineApp && <button onClick={install}>Install app</button>}
       </div>
     </>
   ) : (
@@ -224,6 +262,11 @@ export default function App() {
       text="Open your reminders to continue."
     />
   );
+  const active = ["detail", "edit", "duplicate"].includes(page)
+    ? "reminders"
+    : ["rules", "groups", ...settingsPages].includes(page)
+      ? "more"
+      : page;
   return (
     <AppContext.Provider
       value={{ data: data ?? initialData(), update, now, notify: setToast, go }}
@@ -243,52 +286,49 @@ export default function App() {
         <nav aria-label="Main navigation">
           {nav.map(([path, label, Icon]) => (
             <a
+              key={path}
               className={page === path ? "active" : ""}
               href={`#${path}`}
-              key={path}
-              aria-current={page === path ? "page" : undefined}
             >
               <Icon size={20} />
               {label}
             </a>
           ))}
+          {offlineApp && (
+            <a href="#notifications">
+              <Bell size={20} />
+              Notifications
+            </a>
+          )}
         </nav>
         <a className="button primary sidebar-add" href="#add">
           <Plus size={19} />
-          Add Reminder
+          Create reminder
         </a>
         <div className="sidebar-bottom">
           <div className="sidebar-art" />
           <p>Book Before It’s Late.</p>
-          <button className="text-link" onClick={install}>
-            <Download size={16} />
-            Install App
-          </button>
         </div>
       </aside>
       <div className="app-body">
-        <header className="topbar">
+        <header className={`topbar ${page !== "home" ? "inner-topbar" : ""}`}>
           <span className="desktop-top-label">
             Your plans. Perfectly timed.
           </span>
           <div className="mobile-brand">
             <Brand />
           </div>
-          <div className="top-status">
-            {online ? (
-              <>
-                <span className="local-dot" />
-                Local & private
-              </>
-            ) : (
-              <>
-                <WifiOff size={16} />
-                Offline
-              </>
-            )}
-          </div>
+          <span className="top-status">
+            <ShieldCheck size={15} />
+            Local & private
+          </span>
         </header>
-        <main id="main-content" tabIndex={-1}>
+        <main id="main-content" tabIndex={-1} data-page={page}>
+          {alertError && (
+            <a className="info" role="alert" href="#notifications">
+              {alertError}
+            </a>
+          )}
           <Suspense fallback={<p role="status">Loading…</p>}>{screen}</Suspense>
           <PrivacyNote />
         </main>
@@ -298,16 +338,15 @@ export default function App() {
           [
             ["home", "Home", Home],
             ["reminders", "Reminders", Bell],
-            ["add", "Add", Plus],
             ["calendar", "Calendar", CalendarDays],
             ["more", "More", MoreHorizontal],
           ] as const
         ).map(([path, label, Icon]) => (
           <a
-            className={`${page === path ? "active" : ""} ${path === "add" ? "add-nav" : ""}`}
-            href={`#${path}`}
             key={path}
-            aria-current={page === path ? "page" : undefined}
+            className={active === path ? "active" : ""}
+            href={`#${path}`}
+            aria-current={active === path ? "page" : undefined}
           >
             <Icon size={22} />
             <span>{label}</span>
@@ -325,28 +364,13 @@ export default function App() {
           </button>
         </div>
       )}
-      {(needRefresh || offlineReady) && (
-        <div className="update-notice" role="status">
-          <p>
-            {needRefresh
-              ? "A new BookOnTime version is ready. Save any form before updating."
-              : "BookOnTime is ready offline. Holiday data is cached as you view it."}
-          </p>
-          <div className="actions">
-            {needRefresh && (
-              <button onClick={() => void updateServiceWorker(true)}>
-                Update now
-              </button>
-            )}
-            <button
-              onClick={() => {
-                setNeedRefresh(false);
-                setOfflineReady(false);
-              }}
-            >
-              Dismiss
-            </button>
-          </div>
+      {!offlineApp && needRefresh && (
+        <div className="update-notice">
+          <p>A new version is ready. Save your form before updating.</p>
+          <button onClick={() => void updateServiceWorker(true)}>
+            Update now
+          </button>
+          <button onClick={() => setNeedRefresh(false)}>Dismiss</button>
         </div>
       )}
       <datalist id="timezones">

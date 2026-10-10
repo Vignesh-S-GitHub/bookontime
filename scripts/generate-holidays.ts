@@ -17,7 +17,7 @@ await writeFile(
   "src/data/regions.json",
   JSON.stringify(regions, null, 2) + "\n",
 );
-for (let year = start; year <= start + 3; year++) {
+for (let year = start; year <= start + 5; year++) {
   const national = hd
     .getHolidays(year)
     .filter((h) => h.type === "public" || h.type === "observance");
@@ -64,7 +64,7 @@ await writeFile(
   `${base}/coverage.json`,
   JSON.stringify(
     {
-      years: [start, start + 1, start + 2, start + 3],
+      years: Array.from({ length: 6 }, (_, i) => start + i),
       country: "IN",
       regions: Object.keys(regions),
       note: "Baseline and selected festival overrides; not an exhaustive official holiday gazette. Verify tentative dates.",
@@ -74,5 +74,5 @@ await writeFile(
   ) + "\n",
 );
 console.log(
-  `Generated India and ${Object.keys(regions).length} regions for ${start}–${start + 3}.`,
+  `Generated India and ${Object.keys(regions).length} regions for ${start}–${start + 5}.`,
 );

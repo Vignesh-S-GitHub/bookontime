@@ -74,56 +74,62 @@ export default function Reminders({
             onChange={(e) => setSearch(e.target.value)}
           />
         </label>
-        <div className="filter-grid">
-          <Field label="Category">
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">All categories</option>
-              {categories.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Status">
-            <select value={status} onChange={(e) => setStatus(e.target.value)}>
-              <option value="">All statuses</option>
-              {[
-                "Future",
-                "Booking Soon",
-                "Opens Today",
-                "Booking Open",
-                "Booked",
-                "Completed",
-                "Missed / Expired",
-                "Archived",
-              ].map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Opening from">
-            <input
-              type="date"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-            />
-          </Field>
-          <Field label="Opening until">
-            <input
-              type="date"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-            />
-          </Field>
-          <Field label="Sort openings">
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              <option value="asc">Earliest first</option>
-              <option value="desc">Latest first</option>
-            </select>
-          </Field>
-        </div>
+        <details>
+          <summary>Filter & sort</summary>
+          <div className="filter-grid">
+            <Field label="Category">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">All categories</option>
+                {categories.map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Status">
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="">All statuses</option>
+                {[
+                  "Future",
+                  "Booking Soon",
+                  "Opens Today",
+                  "Booking Open",
+                  "Booked",
+                  "Completed",
+                  "Missed / Expired",
+                  "Archived",
+                ].map((s) => (
+                  <option key={s}>{s}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Opening from">
+              <input
+                type="date"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+              />
+            </Field>
+            <Field label="Opening until">
+              <input
+                type="date"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+              />
+            </Field>
+            <Field label="Sort openings">
+              <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                <option value="asc">Earliest first</option>
+                <option value="desc">Latest first</option>
+              </select>
+            </Field>
+          </div>
+        </details>
       </section>
       <p className="muted small">
         {filtered.length} reminder{filtered.length === 1 ? "" : "s"} · Dates

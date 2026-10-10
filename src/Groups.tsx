@@ -6,12 +6,14 @@ export default function Groups({ selectedId }: { selectedId?: string }) {
   const { data, update, now, notify } = useApp();
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [creating, setCreating] = useState(false);
   async function add(e: FormEvent) {
     e.preventDefault();
     try {
       const group = groupSchema.parse({ id: crypto.randomUUID(), name });
       await update((d) => ({ ...d, groups: [...d.groups, group] }));
       setName("");
+      setCreating(false);
       setError("");
       notify("Group created. Choose it when adding or editing a reminder.");
     } catch (e) {
@@ -21,30 +23,38 @@ export default function Groups({ selectedId }: { selectedId?: string }) {
   return (
     <>
       <PageHeading
-        title="Journey & Event Groups"
+        title="Groups"
         subtitle="Related booking opportunities, with each opening kept separate."
       />
-      <form className="panel group-form" onSubmit={add}>
-        <label className="field">
-          <span>New group name</span>
-          <input
-            required
-            maxLength={200}
-            placeholder="e.g. Diwali Chennai → Bengaluru Trip"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </label>
-        <button className="primary">
+      {creating && (
+        <form className="panel group-form" onSubmit={add}>
+          <label className="field">
+            <span>New group name</span>
+            <input
+              required
+              maxLength={200}
+              placeholder="e.g. Diwali Chennai → Bengaluru Trip"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </label>
+          <button className="primary">
+            <Plus size={18} />
+            Create Group
+          </button>
+          {error && (
+            <p role="alert" className="error">
+              {error}
+            </p>
+          )}
+        </form>
+      )}
+      {!selectedId && !creating && (
+        <button className="primary wide" onClick={() => setCreating(true)}>
           <Plus size={18} />
-          Create Group
+          Create group
         </button>
-        {error && (
-          <p role="alert" className="error">
-            {error}
-          </p>
-        )}
-      </form>
+      )}
       {!data.groups.length && (
         <Empty
           title="Keep related openings together"
@@ -71,7 +81,7 @@ export default function Groups({ selectedId }: { selectedId?: string }) {
                 <div className="section-head">
                   <h2>
                     <Layers3 size={22} />
-                    {g.name}
+                    <a href={`#groups/${g.id}`}>{g.name}</a>
                   </h2>
                   <button
                     className="danger"
@@ -99,7 +109,12 @@ export default function Groups({ selectedId }: { selectedId?: string }) {
                     ? `Next opening: ${next.title} · ${formatAt(next.bookingOpeningAt, data.settings, next.timezone)}`
                     : "No future active openings in this group."}
                 </p>
-                {items.length ? (
+                {!selectedId ? (
+                  <p className="small muted">
+                    {items.length} reminders ·{" "}
+                    <a href={`#groups/${g.id}`}>View group →</a>
+                  </p>
+                ) : items.length ? (
                   items.map((r) => <ReminderCard key={r.id} reminder={r} />)
                 ) : (
                   <p className="muted">

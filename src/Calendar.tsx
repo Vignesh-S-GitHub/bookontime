@@ -18,7 +18,13 @@ export default function Calendar() {
     data.settings,
   );
   const weekends = data.settings.longWeekends
-    ? longWeekends(holidays, data.settings.weekendDays)
+    ? longWeekends(
+        holidays.filter(
+          (h) =>
+            h.scope === "national" || h.region === data.settings.primaryRegion,
+        ),
+        data.settings.weekendDays,
+      )
     : [];
   const reminders = data.reminders
     .filter(
@@ -29,7 +35,7 @@ export default function Calendar() {
   return (
     <>
       <PageHeading
-        title="Booking Opening Calendar"
+        title="Calendar"
         subtitle={`Opening dates take the lead. Times shown in ${data.settings.timezone}.`}
       >
         <a className="button primary" href="#add">

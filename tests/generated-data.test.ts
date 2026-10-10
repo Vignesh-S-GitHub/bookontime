@@ -3,10 +3,11 @@ import { describe, it, expect } from "vitest";
 import { Temporal } from "@js-temporal/polyfill";
 import type { Holiday } from "../src/holidays";
 describe("shipped holiday datasets", () => {
-  it("ships four years and every advertised region", () => {
+  it("ships the current year plus five years and every advertised region", () => {
     const coverage = JSON.parse(
       readFileSync("public/data/holidays/coverage.json", "utf8"),
     );
+    expect(coverage.years).toEqual([2026, 2027, 2028, 2029, 2030, 2031]);
     for (const year of coverage.years) {
       expect(
         JSON.parse(readFileSync(`public/data/holidays/IN/${year}.json`, "utf8"))

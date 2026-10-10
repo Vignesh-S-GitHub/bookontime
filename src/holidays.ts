@@ -1,5 +1,6 @@
 import { Temporal } from "@js-temporal/polyfill";
 import type { Settings } from "./domain";
+import coverage from "../public/data/holidays/coverage.json";
 export type Holiday = {
   date: string;
   name: string;
@@ -50,19 +51,12 @@ export function longWeekends(
 const cached = new Map<string, Promise<Holiday[]>>();
 async function readHolidayFile(path: string): Promise<Holiday[]> {
   const url = `${import.meta.env.BASE_URL}data/holidays/${path}`;
-  const cache =
-    "caches" in globalThis
-      ? await caches.open("bookontime-holidays-v1")
-      : undefined;
-  const saved = await cache?.match(url);
-  if (saved) return saved.json() as Promise<Holiday[]>;
   const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
   if (!response.ok)
     throw new Error(
-      "Holiday data is unavailable for a selected year or region. Previously loaded data remains available offline.",
+      "Holiday data is unavailable for this year. The bundled range is 2026–2031.",
     );
   const records = (await response.clone().json()) as Holiday[];
-  await cache?.put(url, response);
   return records;
 }
 export async function loadHolidays(
@@ -77,6 +71,10 @@ export async function loadHolidays(
           .map((region) => `IN/states/${region}-${year}.json`)
       : []),
   ]);
+  if (years.some((year) => !coverage.years.includes(year)))
+    throw new Error(
+      "Holiday data is bundled for 2026–2031. Reminders outside this range still work.",
+    );
   const rows = await Promise.all(
     paths.map((path) => {
       if (!cached.has(path))
