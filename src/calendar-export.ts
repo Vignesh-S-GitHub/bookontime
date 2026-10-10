@@ -1,5 +1,6 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { ruleSummary, type Reminder } from "./domain";
+import { Documents, nativeAndroid } from "./platform";
 const escape = (s: string) =>
   s
     .replace(/\\/g, "\\\\")
@@ -67,7 +68,15 @@ export function googleCalendar(r: Reminder): string {
   });
   return `https://calendar.google.com/calendar/render?${params}`;
 }
-export function download(name: string, content: string, type: string): void {
+export async function download(
+  name: string,
+  content: string,
+  type: string,
+): Promise<void> {
+  if (nativeAndroid) {
+    await Documents.exportFile({ name, content, mime: type });
+    return;
+  }
   const url = URL.createObjectURL(new Blob([content], { type }));
   const a = document.createElement("a");
   a.href = url;

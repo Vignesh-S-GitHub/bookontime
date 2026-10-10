@@ -1,5 +1,6 @@
 import { Copy, Edit3, Share2, Check, Trash2, ArrowLeft } from "lucide-react";
-import { formatAt, ruleSummary, type Reminder } from "./domain";
+import { dateInZone, formatAt, ruleSummary, type Reminder } from "./domain";
+import { offlineApp } from "./platform";
 import {
   BookingActions,
   CategoryIcon,
@@ -14,7 +15,7 @@ import { googleCalendar } from "./calendar-export";
 export default function Details({ reminder: r }: { reminder: Reminder }) {
   const { data, update, notify, go } = useApp();
   const { holidays, error } = useHolidays(
-    [r.targetDate, r.bookingOpeningAt.slice(0, 10)],
+    [r.targetDate, dateInZone(r.bookingOpeningAt, r.timezone)],
     data.settings,
   );
   async function resolve(resolution: Reminder["resolution"]) {
@@ -53,14 +54,21 @@ export default function Details({ reminder: r }: { reminder: Reminder }) {
         <ArrowLeft size={16} />
         All reminders
       </a>
-      <PageHeading
-        title={r.title}
-        subtitle={`${r.category}${r.route ? ` · ${r.route}` : ""}`}
-      >
+      <PageHeading title="Reminder details">
         <Status reminder={r} />
       </PageHeading>
       <div className="detail-grid">
         <section className="panel detail-opening">
+          <div className="form-category">
+            <CategoryIcon category={r.category} />
+            <div>
+              <strong>{r.title}</strong>
+              <small>
+                {r.category}
+                {r.route ? ` · ${r.route}` : ""}
+              </small>
+            </div>
+          </div>
           <div className="section-head">
             <span className="eyebrow">BOOKING OPENING</span>
             <CategoryIcon category={r.category} />
@@ -71,14 +79,16 @@ export default function Details({ reminder: r }: { reminder: Reminder }) {
           <p>{r.timezone}</p>
           <Countdown at={r.bookingOpeningAt} large />
           <BookingActions reminder={r} />
-          <a
-            className="text-link"
-            href={googleCalendar(r)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open in Google Calendar ↗
-          </a>
+          {!offlineApp && (
+            <a
+              className="text-link"
+              href={googleCalendar(r)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open in Google Calendar ↗
+            </a>
+          )}
           <hr />
           <div className="actions">
             <a className="button" href={`#edit/${r.id}`}>
@@ -89,10 +99,12 @@ export default function Details({ reminder: r }: { reminder: Reminder }) {
               <Copy size={17} />
               Duplicate
             </a>
-            <button onClick={() => void share()}>
-              <Share2 size={17} />
-              Share
-            </button>
+            {!offlineApp && (
+              <button onClick={() => void share()}>
+                <Share2 size={17} />
+                Share
+              </button>
+            )}
             <button onClick={() => void resolve("booked")}>
               <Check size={17} />
               Mark Booked
@@ -156,7 +168,7 @@ export default function Details({ reminder: r }: { reminder: Reminder }) {
               <>
                 <dt>Source</dt>
                 <dd>
-                  {r.rule.sourceUrl ? (
+                  {r.rule.sourceUrl && !offlineApp ? (
                     <a
                       href={r.rule.sourceUrl}
                       target="_blank"
@@ -188,8 +200,9 @@ export default function Details({ reminder: r }: { reminder: Reminder }) {
             ))}
           </ul>
           <p className="hint">
-            Browser alerts are checked while BookOnTime is running. Add to your
-            calendar for future reminders when the app is closed.
+            {offlineApp
+              ? "Android alerts are scheduled on this phone. Check Notifications for permissions and scheduled alerts."
+              : "Browser alerts are checked while the app is running. Export to a calendar for closed-app reminders."}
           </p>
         </section>
         <section className="panel">
@@ -198,7 +211,7 @@ export default function Details({ reminder: r }: { reminder: Reminder }) {
             <p className="hint">{error}</p>
           ) : (
             <HolidayContext
-              date={r.targetDate || r.bookingOpeningAt.slice(0, 10)}
+              date={r.targetDate || dateInZone(r.bookingOpeningAt, r.timezone)}
               holidays={holidays}
               settings={data.settings}
             />

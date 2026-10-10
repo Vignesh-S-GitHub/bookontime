@@ -1,19 +1,17 @@
 import {
-  CalendarDays,
-  CalendarPlus,
   Plus,
-  SlidersHorizontal,
-  ArrowUpRight,
+  CalendarDays,
+  Clock,
   Layers3,
+  ArrowRight,
+  Info,
 } from "lucide-react";
-import { categories, formatAt, statusOf } from "./domain";
+import { categories, formatAt, dateInZone } from "./domain";
 import {
-  BookingActions,
   CategoryIcon,
   Countdown,
   Empty,
   HolidayContext,
-  PageHeading,
   ReminderCard,
   Status,
   useApp,
@@ -26,204 +24,134 @@ export default function Dashboard() {
     .sort((a, b) => a.bookingOpeningAt.localeCompare(b.bookingOpeningAt));
   const next = active.find((r) => Date.parse(r.bookingOpeningAt) > now);
   const open = active.filter((r) => Date.parse(r.bookingOpeningAt) <= now);
-  const week = active.filter(
-    (r) =>
-      Date.parse(r.bookingOpeningAt) > now &&
-      Date.parse(r.bookingOpeningAt) - now <= 7 * 86400000,
-  );
   const { holidays, error } = useHolidays(
-    [next?.targetDate ?? new Date(now).toISOString().slice(0, 10)],
+    [
+      next?.targetDate ||
+        dateInZone(new Date(now).toISOString(), data.settings.timezone),
+    ],
     data.settings,
   );
   return (
-    <>
-      <PageHeading
-        title="Be ready for your next booking."
-        subtitle="A little planning. The right moment."
-      >
-        <a className="button primary" href="#add">
-          <Plus size={18} />
-          Add Reminder
-        </a>
-      </PageHeading>
-      <div className="stats">
-        <a href="#reminders">
-          <span>Upcoming openings</span>
-          <strong>
-            {active.length - open.length}
-            <ArrowUpRight size={20} />
-          </strong>
-        </a>
-        <a href="#reminders/open">
-          <span>Booking now</span>
-          <strong>
-            {open.length}
-            <ClockIcon />
-          </strong>
-        </a>
-        <a href="#calendar">
-          <span>Opening this week</span>
-          <strong>
-            {week.length}
-            <CalendarDays size={20} />
-          </strong>
-        </a>
-      </div>
-      <div className="dashboard-grid">
-        <section className="panel next-booking">
-          <div className="section-head">
-            <span className="eyebrow">NEXT BOOKING</span>
-            {next && <Status reminder={next} />}
-          </div>
-          {next ? (
-            <>
-              <div className="next-title">
-                <CategoryIcon category={next.category} size={30} />
+    <div className="home-screen">
+      <section className="panel home-opening">
+        {next ? (
+          <>
+            <div className="section-head">
+              <div className="form-category">
+                <CategoryIcon category={next.category} />
                 <div>
-                  <span className="eyebrow">{next.category}</span>
-                  <h2>{next.title}</h2>
-                  {next.route && <p>{next.route}</p>}
+                  <a className="card-title" href={`#detail/${next.id}`}>
+                    {next.title}
+                  </a>
+                  <small>
+                    {next.category}
+                    {next.provider ? ` · ${next.provider}` : ""}
+                  </small>
                 </div>
               </div>
-              <p className="opening-caption">Booking opens on</p>
-              <div className="hero-date">
-                {formatAt(next.bookingOpeningAt, data.settings, next.timezone)}
+              <Status reminder={next} />
+            </div>
+            <div className="date-pair">
+              <div>
+                <small>Booking opens</small>
+                <strong>
+                  {formatAt(
+                    next.bookingOpeningAt,
+                    data.settings,
+                    next.timezone,
+                  )}
+                </strong>
+                <small>{next.timezone}</small>
               </div>
-              <small>{next.timezone}</small>
-              <Countdown at={next.bookingOpeningAt} large />
-              <BookingActions reminder={next} />
-              <a href={`#detail/${next.id}`} className="text-link">
-                View Details →
-              </a>
-            </>
-          ) : (
-            <Empty
-              title="Make room for your next plan"
-              text="Add the moment a booking opens. We’ll keep the countdown ready."
-            />
-          )}
-        </section>
-        <aside className="panel insight">
-          <div className="eyebrow">PLAN WITH CONTEXT</div>
-          <CalendarDays size={28} />
-          <h2>
-            {next?.targetDate
-              ? "Around your target date"
-              : "Good timing starts here"}
-          </h2>
-          {next?.targetDate ? (
-            <>
-              <p>{next.targetDate}</p>
-              {error ? (
-                <p className="hint">{error}</p>
-              ) : (
-                <HolidayContext
-                  date={next.targetDate}
-                  holidays={holidays}
-                  settings={data.settings}
-                />
-              )}
-            </>
-          ) : (
-            <p>
-              See regional holidays and long weekends alongside your bookings.
-            </p>
-          )}
-          <a className="button" href="#calendar">
-            View Calendar
-            <ArrowUpRight size={16} />
-          </a>
-          <div className="insight-art" />
-        </aside>
-      </div>
-      <section className="panel quick-actions">
-        <h2>Quick actions</h2>
-        <div>
-          <a href="#add">
-            <CalendarPlus />
-            Add Reminder
-          </a>
-          <a href="#calendar">
-            <CalendarDays />
-            View Calendar
-          </a>
-          <a href="#rules">
-            <SlidersHorizontal />
-            Browse Rules
-          </a>
-          <a href="#groups">
-            <Layers3 />
-            Journey Groups
-          </a>
+              <div>
+                <small>Journey / event</small>
+                <strong>{next.targetDate || "Not specified"}</strong>
+                <small>{next.route || next.category}</small>
+              </div>
+            </div>
+            <Countdown at={next.bookingOpeningAt} />
+            <a className="text-link" href={`#detail/${next.id}`}>
+              View reminder
+              <ArrowRight size={16} />
+            </a>
+          </>
+        ) : (
+          <Empty
+            title="Your next opening starts here"
+            text="Create a reminder for when a booking opens."
+            action={false}
+          />
+        )}
+        <div className="info">
+          <Info size={17} />
+          Set a reminder so you don’t miss the opening.
         </div>
+        <a className="button primary wide" href="#add">
+          <Plus size={20} />
+          Create reminder
+        </a>
       </section>
-      {open.length > 0 && (
-        <section>
-          <div className="section-head">
-            <h2>Booking Now</h2>
-            <a href="#reminders/open">View all →</a>
-          </div>
-          {open.slice(0, 3).map((r) => (
-            <ReminderCard key={r.id} reminder={r} />
-          ))}
-        </section>
-      )}
-      {active.length > 0 && (
-        <section>
-          <div className="section-head">
-            <h2>Upcoming</h2>
-            <a href="#reminders">All reminders →</a>
-          </div>
-          {active
-            .filter((r) => Date.parse(r.bookingOpeningAt) > now)
-            .slice(0, 4)
-            .map((r) => (
-              <ReminderCard key={r.id} reminder={r} />
-            ))}
-        </section>
-      )}
-      <section className="panel">
-        <h2>What are you booking next?</h2>
-        <div className="category-grid">
-          {categories.map((c) => (
-            <a href={`#add/${encodeURIComponent(c)}`} key={c}>
+      <section className="home-quick">
+        <h2>Quick categories</h2>
+        <div className="quick-category-grid">
+          {categories.slice(0, 4).map((c) => (
+            <a key={c} href={`#add/${encodeURIComponent(c)}`}>
               <CategoryIcon category={c} />
               <span>{c}</span>
             </a>
           ))}
         </div>
       </section>
-      {data.groups.length > 0 && (
+      <div
+        className="home-art"
+        role="img"
+        aria-label="Pale blue travel journey illustration"
+      />
+      {open.length > 0 && (
         <section>
           <div className="section-head">
-            <h2>Trip Groups</h2>
-            <a href="#groups">View groups →</a>
+            <h2>
+              <Clock size={18} />
+              Booking now
+            </h2>
+            <a href="#reminders/open">View all</a>
           </div>
-          <div className="group-grid">
-            {data.groups.slice(0, 3).map((g) => (
-              <a className="panel" href={`#groups/${g.id}`} key={g.id}>
-                <Layers3 />
-                <h3>{g.name}</h3>
-                <p>
-                  {data.reminders.filter((r) => r.groupId === g.id).length}{" "}
-                  booking opportunities
-                </p>
-                <small>
-                  {active.find((r) => r.groupId === g.id)
-                    ? statusOf(
-                        active.find((r) => r.groupId === g.id)!,
-                        now,
-                      )
-                    : "No active openings"}
-                </small>
-              </a>
-            ))}
-          </div>
+          {open.slice(0, 3).map((r) => (
+            <ReminderCard key={r.id} reminder={r} />
+          ))}
         </section>
       )}
-    </>
+      {next?.targetDate && (
+        <details className="panel home-context">
+          <summary>
+            <CalendarDays size={18} />
+            Holiday context for your journey
+          </summary>
+          {error ? (
+            <p className="hint">{error}</p>
+          ) : (
+            <HolidayContext
+              date={next.targetDate}
+              holidays={holidays}
+              settings={data.settings}
+            />
+          )}
+        </details>
+      )}
+      {data.groups.length > 0 && (
+        <section className="panel">
+          <div className="section-head">
+            <h2>
+              <Layers3 size={19} />
+              Journey & event groups
+            </h2>
+            <a href="#groups">View groups</a>
+          </div>
+          <p className="small">
+            {data.groups.length} groups · {active.length} active openings
+          </p>
+        </section>
+      )}
+    </div>
   );
-}
-function ClockIcon() {
-  return <span aria-hidden="true">↗</span>;
 }

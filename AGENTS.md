@@ -40,6 +40,8 @@ Do not add or introduce without explicit user instruction:
 
 Version 1 must remain a static GitHub Pages-compatible PWA.
 
+The user subsequently authorized an Android app using the existing code and the approved 18-screen mockups. Preserve the web build, and add a separate Capacitor Android build that is fully offline: no INTERNET/network permissions, remote assets, analytics, external links, cloud backup or web update service. Bundle India holidays for 2026–2031. Use only white, blue and navy, Inter, and the approved original logo/background. Native permission dialogs and notification presentation are controlled by Android. See `docs/ANDROID_APP.md` for the Android contract and validation.
+
 ## Anti-deviation rule
 
 Do not add, remove, reinterpret, or materially change product scope because another design seems preferable. When requirements and mockups disagree, follow the written specification. Generated mockup usernames, emails, PNRs, account controls, typos, sample dates, and placeholder copy are not requirements.

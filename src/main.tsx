@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "@fontsource-variable/inter";
 import "./styles.css";
+import "./android-design.css";
 import App from "./App";
 import ErrorBoundary from "./ErrorBoundary";
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -11,10 +11,12 @@ import {
 } from "./domain";
 import { CategoryIcon, Field, PageHeading, useApp } from "./ui";
 import RuleFields from "./RuleFields";
+import { offlineApp } from "./platform";
 export default function Rules() {
   const { data, update, notify } = useApp();
   const [editing, setEditing] = useState<Rule | null>(null);
   const [error, setError] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("Train");
   async function save(e: FormEvent) {
     e.preventDefault();
     try {
@@ -103,119 +105,134 @@ export default function Rules() {
           </div>
         </form>
       )}
-      <div className="rules-grid">
-        {data.rules.map((r) => (
-          <article
-            className={`panel rule-card ${r.disabled ? "disabled-card" : ""}`}
-            key={r.id}
+      <div className="category-tabs" aria-label="Rule categories">
+        {["All", ...categories].map((c) => (
+          <button
+            key={c}
+            className={categoryFilter === c ? "selected" : ""}
+            onClick={() => setCategoryFilter(c)}
           >
-            <div className="section-head">
-              <CategoryIcon category={r.category} />
-              <span className="status">
-                {r.disabled
-                  ? "Disabled"
-                  : r.verificationStatus === "verified"
-                    ? "Verified"
-                    : r.verificationStatus === "custom"
-                      ? "Custom"
-                      : "Needs Verification"}
-              </span>
-            </div>
-            <h2>{r.name}</h2>
-            <p>{ruleSummary(r)}</p>
-            <small>{r.timezone}</small>
-            {r.sourceLabel && (
-              <p>
-                {r.sourceLabel}
-                {r.sourceUrl && (
-                  <>
-                    {" "}
-                    ·{" "}
-                    <a
-                      href={r.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Source
-                    </a>
-                  </>
-                )}
-              </p>
-            )}
-            {r.lastVerifiedAt && (
-              <p className="small">Last verified {r.lastVerifiedAt}</p>
-            )}
-            {r.notes && <p className="small muted">{r.notes}</p>}
-            <div className="actions">
-              <button
-                onClick={() => {
-                  setEditing(structuredClone(r));
-                  setError("");
-                  window.scrollTo(0, 0);
-                }}
-              >
-                Edit
-              </button>
-              <button
-                aria-label={`Duplicate ${r.name}`}
-                onClick={() => {
-                  setEditing({
-                    ...r,
-                    id: crypto.randomUUID(),
-                    presetId: undefined,
-                    name: `${r.name} (copy)`,
-                    verificationStatus: "custom",
-                  });
-                  setError("");
-                  window.scrollTo(0, 0);
-                }}
-              >
-                <Copy size={17} />
-              </button>
-              <button
-                onClick={() =>
-                  void update((d) => ({
-                    ...d,
-                    rules: d.rules.map((x) =>
-                      x.id === r.id ? { ...x, disabled: !x.disabled } : x,
-                    ),
-                  })).catch(() => {})
-                }
-              >
-                {r.disabled ? "Enable" : "Disable"}
-              </button>
-              {r.presetId && (
+            {c}
+          </button>
+        ))}
+      </div>
+      <div className="rules-grid">
+        {data.rules
+          .filter(
+            (r) => categoryFilter === "All" || r.category === categoryFilter,
+          )
+          .map((r) => (
+            <article
+              className={`panel rule-card ${r.disabled ? "disabled-card" : ""}`}
+              key={r.id}
+            >
+              <div className="section-head">
+                <CategoryIcon category={r.category} />
+                <span className="status">
+                  {r.disabled
+                    ? "Disabled"
+                    : r.verificationStatus === "verified"
+                      ? "Verified"
+                      : r.verificationStatus === "custom"
+                        ? "Custom"
+                        : "Needs Verification"}
+                </span>
+              </div>
+              <h2>{r.name}</h2>
+              <p>{ruleSummary(r)}</p>
+              <small>{r.timezone}</small>
+              {r.sourceLabel && (
+                <p>
+                  {r.sourceLabel}
+                  {r.sourceUrl && !offlineApp && (
+                    <>
+                      {" "}
+                      ·{" "}
+                      <a
+                        href={r.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Source
+                      </a>
+                    </>
+                  )}
+                </p>
+              )}
+              {r.lastVerifiedAt && (
+                <p className="small">Last verified {r.lastVerifiedAt}</p>
+              )}
+              {r.notes && <p className="small muted">{r.notes}</p>}
+              <div className="actions">
                 <button
-                  aria-label={`Restore default ${r.name}`}
                   onClick={() => {
-                    if (
-                      window.confirm(
-                        "Restore this rule to its shipped default? Existing reminders will keep their saved rules.",
-                      )
-                    )
-                      void update((d) => ({
-                        ...d,
-                        rules: d.rules.map((x) =>
-                          x.id === r.id
-                            ? {
-                                ...structuredClone(
-                                  defaultRules.find(
-                                    (p) => p.id === r.presetId,
-                                  )!,
-                                ),
-                                id: r.id,
-                              }
-                            : x,
-                        ),
-                      })).catch(() => {});
+                    setEditing(structuredClone(r));
+                    setError("");
+                    window.scrollTo(0, 0);
                   }}
                 >
-                  <RotateCcw size={17} />
+                  Edit
                 </button>
-              )}
-            </div>
-          </article>
-        ))}
+                <button
+                  aria-label={`Duplicate ${r.name}`}
+                  onClick={() => {
+                    setEditing({
+                      ...r,
+                      id: crypto.randomUUID(),
+                      presetId: undefined,
+                      name: `${r.name} (copy)`,
+                      verificationStatus: "custom",
+                    });
+                    setError("");
+                    window.scrollTo(0, 0);
+                  }}
+                >
+                  <Copy size={17} />
+                </button>
+                <button
+                  onClick={() =>
+                    void update((d) => ({
+                      ...d,
+                      rules: d.rules.map((x) =>
+                        x.id === r.id ? { ...x, disabled: !x.disabled } : x,
+                      ),
+                    })).catch(() => {})
+                  }
+                >
+                  {r.disabled ? "Enable" : "Disable"}
+                </button>
+                {r.presetId && (
+                  <button
+                    aria-label={`Restore default ${r.name}`}
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Restore this rule to its shipped default? Existing reminders will keep their saved rules.",
+                        )
+                      )
+                        void update((d) => ({
+                          ...d,
+                          rules: d.rules.map((x) =>
+                            x.id === r.id
+                              ? {
+                                  ...structuredClone(
+                                    defaultRules.find(
+                                      (p) => p.id === r.presetId,
+                                    )!,
+                                  ),
+                                  id: r.id,
+                                }
+                              : x,
+                          ),
+                        })).catch(() => {});
+                    }}
+                  >
+                    <RotateCcw size={17} />
+                  </button>
+                )}
+              </div>
+            </article>
+          ))}
       </div>
     </>
   );

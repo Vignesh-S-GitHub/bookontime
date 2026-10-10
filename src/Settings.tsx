@@ -227,7 +227,7 @@ export default function Settings({
             </fieldset>
             <p className="hint">
               India baseline and selected regional festivals are included for
-              2026–2029. Coverage varies by region; tentative dates should be
+              2026–2031. Coverage varies by region; tentative dates should be
               verified with official local announcements.
             </p>
           </section>

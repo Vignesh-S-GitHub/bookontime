@@ -12,11 +12,11 @@
   --blue-light: #eaf4ff;
   --border: #dfe8f3;
   --shadow: 0 4px 20px #193a6510;
-  --green: #107354;
-  --green-bg: #e5f7ee;
-  --orange: #996000;
-  --orange-bg: #fff4dd;
-  --danger: #b42338;
+  --green: #2563eb;
+  --green-bg: #eaf4ff;
+  --orange: #0f2747;
+  --orange-bg: #eaf4ff;
+  --danger: #0f2747;
   --radius: 18px;
   color-scheme: light;
 }
@@ -1091,12 +1091,12 @@ dd {
   color: #fff;
 }
 .holiday {
-  background: #ce604d;
+  background: #0f2747;
   color: #fff;
 }
 .weekend {
-  background: #edbd53;
-  color: #422e04;
+  background: #eaf4ff;
+  color: #0f2747;
 }
 .calendar-legend {
   display: flex;
