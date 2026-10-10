@@ -15,6 +15,7 @@ for (const permission of [
   "INTERNET",
   "ACCESS_NETWORK_STATE",
   "ACCESS_WIFI_STATE",
+  "WAKE_LOCK",
 ])
   assert.match(
     manifest,
@@ -60,7 +61,6 @@ if (process.argv[2]) {
     "POST_NOTIFICATIONS",
     "SCHEDULE_EXACT_ALARM",
     "RECEIVE_BOOT_COMPLETED",
-    "WAKE_LOCK",
   ]);
   for (const match of merged.matchAll(
     /<uses-permission\b[^>]*android:name="([^"]+)"/g,
@@ -74,6 +74,7 @@ if (process.argv[2]) {
   assert.match(merged, /android:allowBackup="false"/);
   assert.doesNotMatch(merged, /android:debuggable="true"/);
   assert.match(merged, /android:usesCleartextTraffic="false"/);
+  assert.doesNotMatch(merged, /<service\b/);
   for (const tag of merged.matchAll(
     /<(activity|receiver|provider|service)\b[^>]*>/g,
   )) {

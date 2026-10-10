@@ -38,6 +38,7 @@ import {
   syncAndroidAlerts,
   cancelAllAndroidAlerts,
   hasScheduledReminder,
+  testAndroidAlert,
 } from "../src/android-alerts";
 const makeReminder = (): Reminder => ({
   id: "native-test",
@@ -74,6 +75,24 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 describe("Android scheduling boundary", () => {
+  it("uses the same native wake-up/exact access for the explicit test alert and rejects denied notification access", async () => {
+    await testAndroidAlert();
+    expect(fake.pending[0]).toMatchObject({
+      id: -1,
+      schedule: { allowWhileIdle: true },
+      isExactNotification: true,
+      isExactMandatory: true,
+    });
+    expect(JSON.stringify(fake.pending)).not.toContain("Sensitive");
+    fake.exact = "denied";
+    await testAndroidAlert();
+    expect(fake.pending[1].isExactNotification).toBe(false);
+    fake.permission = "denied";
+    await expect(testAndroidAlert()).rejects.toThrow(
+      "Allow notifications first",
+    );
+    expect(fake.schedule).toHaveBeenCalledTimes(2);
+  });
   it("re-arms stored pending records after launch/resume, when Android may have removed OS alarms", async () => {
     const r = makeReminder();
     await syncAndroidAlerts([r]);

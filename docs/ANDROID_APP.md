@@ -1,4 +1,4 @@
-# BookOnTime offline Android 1.1.0
+# BookOnTime offline Android 1.1.1
 
 The Android application evolves the existing React/TypeScript app through Capacitor. Booking calculations, IndexedDB persistence, validated imports, rules, groups and calendars remain shared with the web build. Android uses bundled assets and native alarms; it never loads the deployed website.
 
@@ -34,7 +34,7 @@ System dialogs, date pickers, keyboard and lock-screen notification layout depen
 - No `INTERNET`, network-state, Wi-Fi-state, location, contacts, camera, microphone or broad storage permissions.
 - Android `POST_NOTIFICATIONS`: requested only after pressing Allow notifications.
 - `SCHEDULE_EXACT_ALARM`: optional special access for precise booking times; the app opens Android settings only when requested.
-- `RECEIVE_BOOT_COMPLETED` and `WAKE_LOCK`: restore local reminders after boot and deliver wake-up alarms.
+- `RECEIVE_BOOT_COMPLETED`: restores local reminders after boot. No app `WAKE_LOCK` permission; Android owns the brief alarm-delivery wake-up.
 - AndroidX internal signature permission protects dynamic receivers. It provides no user-data access.
 - Automatic cloud backup and device transfer are excluded. No exported content provider. Release WebView debugging and logging are disabled.
 - Only bundled `https://localhost` resources are allowed in the WebView. This is a virtual asset origin, not an Internet server. CSP, native navigation restrictions and the missing network permission provide separate controls.
@@ -54,6 +54,8 @@ No online calendar, sharing, external booking link or online update action is en
 Holiday data covers 2026 plus five future years through 2031 for India and supported regions. Future festival dates are marked tentative, not guaranteed official declarations. Data refreshes require a new app release. Reminder calculations continue outside holiday coverage, with a clear holiday-data message.
 
 ## Build and signing
+
+See [BATTERY_BEHAVIOR.md](BATTERY_BEHAVIOR.md) for the foreground/background lifecycle, native alarm behavior, executed power checks and physical-phone measurement procedure.
 
 Prerequisites: Node.js 24+, npm, Java 21 and Android SDK platform 36. Use locked `npm ci`. Install Android build tools as requested by Gradle. Configure `ANDROID_HOME` and `JAVA_HOME`, or use Android Studio's compatible SDK/JDK.
 

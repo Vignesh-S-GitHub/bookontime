@@ -28,6 +28,7 @@ import {
 import { download, exportICS } from "./calendar-export";
 import { longWeekends, type Holiday } from "./holidays";
 import { offlineApp } from "./platform";
+import { useForegroundClock } from "./hooks";
 export type AppContextType = {
   data: AppData;
   update: (fn: (d: AppData) => AppData) => Promise<void>;
@@ -164,7 +165,7 @@ export function Countdown({
   at: string;
   large?: boolean;
 }) {
-  const { now } = useApp();
+  const now = useForegroundClock(1000, undefined, Date.parse(at) > Date.now());
   const seconds = Math.max(0, Math.floor((Date.parse(at) - now) / 1000));
   if (!seconds)
     return (

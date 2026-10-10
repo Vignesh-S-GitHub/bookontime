@@ -13,6 +13,16 @@ import android.view.WindowManager;
 import java.io.ByteArrayInputStream;
 
 public class MainActivity extends BridgeActivity {
+    // The app has one WebView. Alarms are native broadcast receivers and do not
+    // require JavaScript to stay alive while the activity is stopped.
+    @Override public void onStop() {
+        super.onStop();
+        if (bridge != null) bridge.getWebView().pauseTimers();
+    }
+    @Override public void onResume() {
+        if (bridge != null) bridge.getWebView().resumeTimers();
+        super.onResume();
+    }
     private boolean local(Uri uri) {
         return "https".equals(uri.getScheme()) && "localhost".equals(uri.getHost()) && (uri.getPort() == -1 || uri.getPort() == 443);
     }

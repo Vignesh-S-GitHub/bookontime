@@ -155,8 +155,9 @@ export async function testAndroidAlert() {
         title: "BookOnTime",
         body: "Your offline test alert is working.",
         channelId: alertChannel,
-        schedule: { at: new Date(Date.now() + 10000) },
-        isExactNotification: false,
+        schedule: { at: new Date(Date.now() + 10000), allowWhileIdle: true },
+        isExactNotification: status.exact,
+        isExactMandatory: status.exact,
       },
     ],
   });

@@ -27,6 +27,8 @@ import { loadData, mutateData } from "./storage";
 import { checkAlerts } from "./notifications";
 import { listenForAlertTap, syncAndroidAlerts } from "./android-alerts";
 import { nativeAndroid, offlineApp } from "./platform";
+import { useForegroundClock } from "./hooks";
+import { setNativeActivity } from "./foreground-clock";
 import { AppContext, Brand, Empty, PrivacyNote } from "./ui";
 const Dashboard = lazy(() => import("./Dashboard"));
 const ReminderForm = lazy(() => import("./ReminderForm"));
@@ -45,7 +47,20 @@ export default function App() {
   const [toast, setToast] = useState("");
   const [alertError, setAlertError] = useState("");
   const [route, setRoute] = useState(location.hash.slice(1) || "home");
-  const [now, setNow] = useState(Date.now());
+  const nextOpening = data?.reminders
+    .filter((r) => r.resolution === "active")
+    .map((r) => Date.parse(r.bookingOpeningAt))
+    .filter((at) => at > Date.now())
+    .reduce<number | undefined>(
+      (next, at) => (next === undefined ? at : Math.min(next, at)),
+      undefined,
+    );
+  const now = useForegroundClock(
+    offlineApp ? 60000 : 1000,
+    nextOpening,
+    true,
+    !offlineApp,
+  );
   const queue = useRef(Promise.resolve());
   const installer = useRef<(Event & { prompt: () => Promise<void> }) | null>(
     null,
@@ -86,7 +101,6 @@ export default function App() {
             "Device storage could not be opened. No saved data has been overwritten.",
           );
       });
-    const tick = setInterval(() => setNow(Date.now()), 1000);
     const hash = () => {
       setRoute(location.hash.slice(1) || "home");
       window.scrollTo(0, 0);
@@ -102,7 +116,6 @@ export default function App() {
     document.documentElement.dataset.offline = String(offlineApp);
     return () => {
       live = false;
-      clearInterval(tick);
       window.removeEventListener("hashchange", hash);
       window.removeEventListener("beforeinstallprompt", installEvent);
     };
@@ -112,6 +125,7 @@ export default function App() {
     const handles = [
       listenForAlertTap(go),
       AndroidApp.addListener("appStateChange", (event) => {
+        setNativeActivity(event.isActive);
         if (event.isActive && loaded.current) void reconcile(undefined, true);
       }),
       AndroidApp.addListener("backButton", () => {

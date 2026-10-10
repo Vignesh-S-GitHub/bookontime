@@ -1,4 +1,31 @@
-# Android 1.1.0 validation
+# Android 1.1.1 validation
+
+Validated on 10 October 2026. This update minimizes idle UI work and retains the original release's offline/security protections. Physical-phone energy measurement remains outstanding.
+
+## Delivered update
+
+- Package `com.bookontime.app`, versionName `1.1.1`, versionCode `3`; same signing certificate as 1.1.0, so install over the earlier APK without uninstalling.
+- Size: 5,045,234 bytes.
+- APK SHA-256: `9a742c60dc7f50ac9e228eeb0fd584d87ca026bec2940646d0e35d76cfa8228e`.
+- Signing certificate SHA-256: `1defbbf43c4e90733bda69273ec0413f26bd185991af85c2a8bab2648f71b9ef`.
+- APK signature verification: PASS, RSA 3072-bit APK v2. Actual permissions: notifications, exact-alarm access, boot receipt, and AndroidX internal signature permission. **No Internet/network or wake-lock permission.**
+
+## Update checks
+
+- PASS: 60 tests in 8 suites, including seven foreground-clock regressions and the native screen-off test-alert regression; TypeScript and Prettier checks.
+- PASS: full npm audit, zero reported vulnerabilities; no dependencies added.
+- PASS: Android build/sync, signed release assembly, lint (0 errors, 29 template/tooling warnings), and actual merged manifest security check. The manifest checker now also rejects wake-lock permission and declared app services.
+- PASS: 96 browser route/viewport checks, no overflow, page exceptions, external requests or alert errors; Inter throughout. A freshly loaded production bundle passed visible countdown updates, hidden countdown pause, immediate resume refresh, and no unnecessary More-page DOM mutations over the observation window.
+- PASS: signed update installation in Android 16/API 36 emulator; the two existing synthetic reminders remained intact and the app remained functional offline.
+- PASS: a fresh explicit test alert registered an exact, one-shot `RTC_WAKEUP` alarm with `repeatInterval=0`. Its new notification timestamp matched delivery while the activity was stopped, the display was `Asleep`, and device-idle state was `IDLE`. No app wake-lock permission was present. Generic notification content remained private.
+- PASS: native app controls and countdown returned after backgrounding/unlocking. Android diagnostics showed no periodic app job or application foreground service; only the system WebView's bound sandbox renderer appeared under services. This cached renderer is not a polling reminder service.
+- PASS: after reboot/unlock, the future synthetic booking alarm restored as a one-shot exact wake-up alarm without manually opening BookOnTime, with the wake-lock permission still absent.
+
+The earlier inexact test alert was observed to defer while the screen was off. The final test now uses the same idle wake-up mechanism as booking alerts and honors exact-alarm access. This correction changes only the explicitly requested test; it introduces no periodic alarm.
+
+See [battery behavior and physical-phone acceptance](BATTERY_BEHAVIOR.md). Emulator CPU snapshots and synthetic battery estimates are **not** evidence of zero drain, a fixed battery percentage, or parity with a fully native Kotlin interface. UI rendering remains React/WebView; reminder delivery is native Kotlin/Android AlarmManager. Export encryption was not weakened. The baseline security and behavior checks below remain relevant, with version-specific results clearly identified.
+
+## Baseline 1.1.0 validation
 
 Validated locally on 10 October 2026. This report distinguishes executed checks from device-dependent behavior. The APK is a signed installable release; it has not undergone an independent penetration test or a physical-phone test.
 

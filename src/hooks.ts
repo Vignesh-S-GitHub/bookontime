@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
 import { loadHolidays, type Holiday } from "./holidays";
 import type { Settings } from "./domain";
+import { startForegroundClock } from "./foreground-clock";
+export function useForegroundClock(
+  intervalMs: number,
+  deadline?: number,
+  enabled = true,
+  background = false,
+) {
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    if (enabled)
+      return startForegroundClock(setNow, { intervalMs, deadline, background });
+  }, [intervalMs, deadline, enabled, background]);
+  return now;
+}
 export function useHolidays(dates: string[], settings: Settings) {
   const [holidays, setHolidays] = useState<Holiday[]>([]);
   const [error, setError] = useState("");

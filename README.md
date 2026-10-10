@@ -41,7 +41,7 @@ Validate with `npm test`, `npm run typecheck`, `npm run format:check`, `npm audi
 
 ## Offline Android app
 
-Version 1.1.0 reuses the existing React application inside Capacitor with native local notifications. The APK has **no Internet or network-state permissions**, no accounts or analytics, and bundled Inter fonts, original brand assets and India holiday data for **2026–2031**. The separate web/PWA build remains available.
+Version 1.1.1 reuses the existing React application inside Capacitor with native local notifications. The APK has **no Internet, network-state or wake-lock permissions**, no accounts or analytics, and bundled Inter fonts, original brand assets and India holiday data for **2026–2031**. The separate web/PWA build remains available. Foreground countdowns update locally, background WebView timers are paused, and native Android alarms deliver reminders without continuous polling. See [battery behavior and measurement](docs/BATTERY_BEHAVIOR.md).
 
 See [Android build, privacy and installation](docs/ANDROID_APP.md) and [Android validation report](docs/ANDROID_VALIDATION.md). Preview the Android UI with `npm run dev:android`; native notification delivery requires an emulator or Android phone.
 

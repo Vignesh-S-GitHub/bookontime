@@ -625,7 +625,7 @@ export default function OfflineSettings({ section }: { section: string }) {
           <Brand />
           <h2>Book Before It’s Late.</h2>
           <p>Know when a ticket, reservation, registration or slot opens.</p>
-          <div className="info">Fully offline Android app · Version 1.1.0</div>
+          <div className="info">Fully offline Android app · Version 1.1.1</div>
           <p>
             No accounts, payments, cloud storage or tracking. All fonts, images
             and holiday data are included in the app.
