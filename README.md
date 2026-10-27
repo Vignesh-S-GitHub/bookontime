@@ -1,66 +1,127 @@
 <div align="center">
 
-# BookOnTime
-### Book before it’s late.
+<img src="public/brand-logo.png" alt="BookOnTime logo" width="96" />
 
-**Know when booking opens · prepare early · act on time**
+# BookOnTime
+
+**Book Before It’s Late.**
+
+![React](https://img.shields.io/badge/React-149ECA?style=flat-square&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![PWA + Android](https://img.shields.io/badge/PWA%20%2B%20Android-2563EB?style=flat-square)
+
+[Quick start](#quick-start) · [Features](#features) · [Android](#offline-android-app) · [Documentation](#documentation)
 
 </div>
 
-BookOnTime is a local-first planning app for time-sensitive bookings: ticket sales, reservations, registrations, and appointment slots. It helps you track when an opportunity opens and prepare the details you need before that moment arrives.
+---
 
-## What it helps you manage
+A local-first planner for the moment a booking, ticket sale, reservation, registration, or slot **opens**. Calculate the opening time from an event date and rule, or enter a known opening time directly; then prepare and act on the relevant provider site.
 
-- A booking or release date and time, with clear countdown context
-- Reminders and preparation details for upcoming opportunities
-- A focused view of future booking windows
-- A responsive, installable PWA that works locally in the browser
-- A fully offline Android app with native local booking alerts
+<a id="features"></a>
 
-## Product boundaries
+## ✨ Features
 
-BookOnTime is designed as a static, GitHub Pages-compatible app. It does not provide accounts, cloud sync, payments, credential storage, automatic purchasing, CAPTCHA solving, or form automation. Your booking remains yours to complete on the relevant service.
+| Plan | Prepare | Keep your data |
+|---|---|---|
+| Calculated or directly entered booking-opening times | Countdowns, configurable alert offsets, and opening-calendar views | IndexedDB storage and validated JSON import/export |
+| Relative, fixed, recurring, and periodic-release rules | Groups, search/filter/sort, and rule verification metadata | ICS/calendar exports |
+| Eleven booking categories | Regional holiday and long-weekend context | Installable web PWA and separate offline Android build |
 
-## Run locally
+Categories: **Train · Bus · Flight · Movie · Event / Concert · Sports · Darshan · Appointment / Slot · Registration · Accommodation · Custom**.
 
-Requires **Node.js 24 or newer** and npm.
+<a id="quick-start"></a>
+
+## 🚀 Quick start
+
+Requires **Node.js 24+** and npm.
 
 ```bash
+git clone https://github.com/Vignesh-S-GitHub/bookontime.git
+cd bookontime
 npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite. For a production build and local preview:
+Open the Vite URL, including its **`/bookontime/`** path. For a production build:
 
 ```bash
 npm run build
 npm run preview
+npm run verify:build
 ```
 
-Validate with `npm test`, `npm run typecheck`, `npm run format:check`, `npm audit`, and `npm run verify:build` after building.
+The web build targets GitHub Pages under `/bookontime/`. Run it through HTTP/HTTPS; opening a source HTML file directly does not reproduce its module and service-worker behavior.
 
-## Offline Android app
+## 🧭 Using the planner
 
-Version 1.1.1 reuses the existing React application inside Capacitor with native local notifications. The APK has **no Internet, network-state or wake-lock permissions**, no accounts or analytics, and bundled Inter fonts, original brand assets and India holiday data for **2026–2031**. The separate web/PWA build remains available. Foreground countdowns update locally, background WebView timers are paused, and native Android alarms deliver reminders without continuous polling. See [battery behavior and measurement](docs/BATTERY_BEHAVIOR.md).
+1. Choose whether to calculate a booking opening or enter one you already know.
+2. Select a category and configure the target date/rule or direct opening time.
+3. Review the calculation, rule source, and verification status before saving.
+4. Add preparation details, groups, and alert offsets as needed.
+5. Export an opening-time calendar event or open the booking site when ready.
 
-See [Android build, privacy and installation](docs/ANDROID_APP.md) and [Android validation report](docs/ANDROID_VALIDATION.md). Preview the Android UI with `npm run dev:android`; native notification delivery requires an emulator or Android phone.
+The app does not purchase tickets, submit provider forms, or store provider credentials. It has no accounts, cloud sync, payments, or required backend.
+
+<a id="offline-android-app"></a>
+
+## 📱 Offline Android app
+
+The Capacitor Android build bundles the existing React application, Inter fonts, approved branding, and India holiday data for **2026–2031**. It uses native local notifications, without Internet, network-state, or wake-lock permissions. Native delivery still depends on Android permissions and device alarm policies.
 
 ```bash
-npm ci
-npm test
-npm run format:check
+npm run dev:android
+# To prepare the native project:
 npm run android:sync
 npm run security:check
 ```
 
-With Java 21 and Android SDK 36 configured, build with `android/gradlew -p android :app:assembleRelease :app:lintRelease` (Windows: `android\gradlew.bat`). Signing credentials are supplied through local environment variables; never commit them. Keep the private signing key safely for future updates.
+With **Java 21** and **Android SDK 36** configured:
 
-## Project notes
+```bash
+android/gradlew -p android :app:assembleRelease :app:lintRelease
+```
 
-This project is spec-led. Start with the repository’s `AGENTS.md` and the product, acceptance, design, and booking-rule documents in `docs/` before changing behavior. The app is built with TypeScript, Vite, and a static PWA setup.
+Windows uses `android\gradlew.bat`. Supply signing material only through local configuration. See the [Android guide](docs/ANDROID_APP.md), [validation report](docs/ANDROID_VALIDATION.md), and [battery behavior](docs/BATTERY_BEHAVIOR.md).
 
-See [implementation and maintenance](docs/IMPLEMENTATION.md) for date semantics, holiday generation/overrides, backups, offline limitations and GitHub Pages deployment.
+## 💾 Storage and notification behavior
 
----
+Browser reminders are local to the device and origin; clearing site data can remove them. Keep JSON backups. A fully closed static web PWA cannot guarantee exact background alerts; use calendar exports where appropriate. Native Android scheduling is a separate capability, not a web push service.
 
-<p align="center"><sub>Be ready when the window opens.</sub></p>
+## 🧪 Development checks
+
+```bash
+npm test
+npm run typecheck
+npm run format:check
+npm run build
+npm run verify:build
+npm audit
+```
+
+These are the repository's configured checks. Native scheduling requires emulator/device verification in addition to web tests. [AGENTS.md](AGENTS.md) sets the specification, branding, and acceptance-review requirements for implementation changes.
+
+<a id="documentation"></a>
+
+## 📚 Documentation
+
+| Guide | Purpose |
+|---|---|
+| [Product specification](docs/PRODUCT_SPEC.md) | Product scope and required behavior |
+| [Acceptance criteria](docs/ACCEPTANCE_CRITERIA.md) | Implementation and release review checklist |
+| [Booking rules](docs/BOOKING_RULES.md) | Opening-date semantics |
+| [Holiday system](docs/HOLIDAY_SYSTEM.md) | Bundled data and maintenance |
+| [Implementation](docs/IMPLEMENTATION.md) | Architecture, backups, offline behavior, and Pages deployment |
+| [Design system](docs/DESIGN_SYSTEM.md) | Approved palette, typography, and identity |
+
+## 📁 Repository guide
+
+[src/](src/) contains React views, date/rule logic, storage, and notification adapters. [tests/](tests/) covers date boundaries and local behavior. [public/](public/) holds approved assets and holiday JSON; [android/](android/) contains the native shell. Web output is `dist/`; Android output is `dist-android/`.
+
+## 🤝 Contributing
+
+Open an issue with a reproducible example or submit a focused pull request. Keep setup instructions and documentation aligned with any behavior changes.
+
+## 📄 License
+
+No repository-level `LICENSE` file is currently included.
